@@ -8,17 +8,16 @@ classes and auto-populate the timezone field with detected attributes.
 
 **Table of Contents**
 
-* [User Timezone Detector Gem](#user-timezone-detector-gem)
-  * [Installation](#installation)
-  * [Usage](#usage)
+* [Installation](#installation)
+* [Usage](#usage)
     * [Automatically populating the timezone field](#automatically-populating-the-timezone-field)
     * [Getting the current time for a user, contact or account](#getting-the-current-time-for-a-user,-contact-or-account)
     * [Compatible Lookup Combinations](#compatible-lookup-combinations)
     * [What if my local class attributes are different?](#what-if-my-local-class-attributes-are-different?)
-  * [Development](#development)
-  * [Contributing](#contributing)
-  * [Rate Limits](#rate-limits)
-  * [License](#license)
+* [Development](#development)
+* [Contributing](#contributing)
+* [Rate Limits](#rate-limits)
+* [License](#license)
 
 ## Installation
 
