@@ -19,6 +19,7 @@ classes and auto-populate the timezone field with detected attributes.
   * [Contributing](#contributing)
   * [Rate Limits](#rate-limits)
   * [License](#license)
+
 ## Installation
 
 Add this line to your application's Gemfile:
