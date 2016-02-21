@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["najibkaake@gmail.com"]
 
   spec.summary       = %q{Detects a user's timezone based on their country/state/city/etc}
-  spec.description   = %q{This gem lets you add a 'has_timezone' to a User, Contact or Account that has a country, state and/or city attribute and it will add the #timezone attribute that will return the model's timezone.}
+  spec.description   = %q{This gem lets you add a 'has_timezone' to a User, Contact or Account that has a city, state, country or zip and it will add the #timezone attribute that will automatically populate the timezone attribute.}
   spec.homepage      = "https://www.github.com/jayelkaake/user_timezone"
   spec.license       = "MIT"
 
@@ -27,11 +27,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.10"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "test-unit"
   spec.add_development_dependency "rspec"
 
-  # spec.add_runtime_dependency 'simple_geocoder'
-  # spec.add_runtime_dependency 'timezone'
   spec.add_runtime_dependency 'httparty'
 end
