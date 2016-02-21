@@ -8,12 +8,15 @@ module UserTimezone
   # returns back the timezone for that person.
   #
   class TimezoneDetector
+
+    attr_reader :options
     ##
     # @param [Hash] options (optional) Options hash... that's a bit weird to say.
     # Check out https://github.com/jayelkaake/user_timezone for more information
     # on options
     def initialize(options = {})
       @options = default_options.merge(options)
+      @request_cache = {}
       @logger = defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
     end
 
@@ -23,14 +26,16 @@ module UserTimezone
     #                      This can be a hash or object, as long as it contains the attributes
     #                      that we want (like street, city, country, zip, etc) or has the attributes
     #                      mapped by the options array "using" key (see https://github.com/jayelkaake/user_timezone)
+    # @param [String] what_to_detect What should be detected? (default: 'timezone') Also 'current_timestamp' also acceptable.
     #
     # @return [String] Timezone value or nil if no timezone was found for the given object.
-    def detect(object)
-      results = HTTParty.get(api_request_url(object))
+    def detect(object, what_to_detect='timezone')
+      request_url = api_request_url(object)
+      results = @request_cache[request_url] ? @request_cache[request_url] : HTTParty.get(request_url)
       if results.empty?
         nil
       else
-        results.first['timezone']
+        results.first[what_to_detect]
       end
     rescue Exception => e
       err e.inspect
@@ -38,12 +43,14 @@ module UserTimezone
       nil
     end
 
+
     ##
     # @return [Hash] default options for the timezone detector class
     def default_options
       {
           using: [:city, :state, :country, :zip],
-          raise_errors: false
+          raise_errors: false,
+          as: :timezone
       }
     end
 
@@ -116,7 +123,10 @@ module UserTimezone
 
 
     def get_object_filter(object, local_name, filter_name)
-      if object.respond_to? (local_name)
+      if object.is_a?(Hash)
+        filter_val = object[local_name]
+        ("#{filter_name}=" << URI::encode(filter_val)) unless filter_val.nil?
+      elsif object.respond_to?(local_name)
         filter_val = object.send(local_name)
         ("#{filter_name}=" << URI::encode(filter_val)) unless filter_val.nil?
       else
