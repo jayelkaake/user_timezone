@@ -6,6 +6,19 @@
 The user timezone detector Gem lets you attach the `detects_timezone` trait to your User, Account or Contact
 classes and auto-populate the timezone field with detected attributes.
 
+**Table of Contents**
+
+* [User Timezone Detector Gem](#user-timezone-detector-gem)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Automatically populating the timezone field](#automatically-populating-the-timezone-field)
+    * [Getting the current time for a user, contact or account](#getting-the-current-time-for-a-user,-contact-or-account)
+    * [Compatible Lookup Combinations](#compatible-lookup-combinations)
+    * [What if my local class attributes are different?](#what-if-my-local-class-attributes-are-different?)
+  * [Development](#development)
+  * [Contributing](#contributing)
+  * [Rate Limits](#rate-limits)
+  * [License](#license)
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -55,7 +68,28 @@ end
 ```
 
 ### Compatible Lookup Combinations
+The API will accept any parameters and try to make a best guess of what the timezone is, even if the timezone
+guess will be very inaccurate when a broad filter is provided (such as only country). The attributes that will be
+looked at are:
+ * state - as a province code or full province name. It'll be more accurate with the code for North America.
+ * zip  - can be any string
+ * country  - as a 2-letter ISO country code
+ * city - This can be any string
 
+All fields are case insensitive.
+
+### What if my local class attributes are different?
+If your class's attributes are different than "zip", "state", etc you can map them using
+ the "using" config in your `detects_timezone` call like this:
+```ruby
+class Contact < ActiveRecord::Base
+    detects_timezone using: { :province => :state, :postal_code => :zip, :country => :country, :city => :city }
+end
+contact = Contact.new(postal_code: 78729, province: "US")
+contact.save!
+puts contact.timezone
+# OUTPUT: "America/Chicago"
+```
 
 ## Development
 
