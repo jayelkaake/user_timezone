@@ -37,7 +37,7 @@ module UserTimezone
       else
         results.first[what_to_detect]
       end
-    rescue Exception => e
+    rescue StandardException => e
       err e.inspect
       raise e if @options[:raise_errors]
       nil
@@ -88,9 +88,9 @@ module UserTimezone
     #
     def get_filters(object)
       if @options[:using].is_a?(Array)
-        get_array_attribute_filters(object, @options[:using])
+        gen_array_attribute_filters(object, @options[:using])
       else
-        get_map_attribute_filters(object, @options[:using])
+        gen_map_attribute_filters(object, @options[:using])
       end
     end
 
@@ -105,24 +105,16 @@ module UserTimezone
     # @param [Hash] attributes Attributes to use in generating filters
     # @return [String] api request URL
     #
-    def get_array_attribute_filters(object, attributes)
-      filters = []
-      attributes.each do |filter_name|
-        filters << get_object_filter(object, filter_name, filter_name)
-      end
-      filters
+    def gen_array_attribute_filters(object, attributes)
+      attributes.map { |filter_name| gen_object_filter(object, filter_name, filter_name) }
     end
 
-    def get_map_attribute_filters(object, map)
-      filters = []
-      map.each do |local_name, filter_name|
-        filters << get_object_filter(object, local_name, filter_name)
-      end
-      filters
+    def gen_map_attribute_filters(object, map)
+      map.map { |local_name, filter_name| gen_object_filter(object, local_name, filter_name) }
     end
 
 
-    def get_object_filter(object, local_name, filter_name)
+    def gen_object_filter(object, local_name, filter_name)
       if object.is_a?(Hash)
         filter_val = object[local_name]
         ("#{filter_name}=" << URI::encode(filter_val)) unless filter_val.nil?
