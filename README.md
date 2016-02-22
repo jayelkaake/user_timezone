@@ -2,6 +2,7 @@
 
 # User Timezone Detector Gem
 ![Travis build for User Timezone Gem](https://travis-ci.org/jayelkaake/user_timezone.svg?branch=master)
+[![Gem Version](https://badge.fury.io/rb/user_timezone.svg)](https://badge.fury.io/rb/user_timezone)
 
 The user timezone detector Gem lets you attach the `detects_timezone` trait to your User, Account or Contact
 classes and auto-populate the timezone field with detected attributes.
